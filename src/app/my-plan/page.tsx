@@ -1,5 +1,6 @@
 'use client';
 
+import SearchBar from '@/components/SearchBar';
 import { usePlan } from '@/context/PlanContext';
 import type { Workout } from '@/types';
 import { ArrowRight, Check, Clock, Flame, Star, X } from 'lucide-react';
@@ -15,10 +16,19 @@ export default function MyPlanPage() {
   const { plan, saved, removeFromPlan, removeFromSaved } = usePlan();
   const [activeTab, setActiveTab] = useState<Tab>('plan');
   const [sortBy, setSortBy] = useState<SortOption>('duration');
+  const [searchQuery, setSearchQuery] = useState('');
 
   const currentList = activeTab === 'plan' ? plan : saved;
 
-  const sortedList = [...currentList].sort((a, b) => {
+  const filteredList = currentList.filter((workout) => {
+    const query = searchQuery.toLowerCase();
+    return (
+      workout.name.toLowerCase().includes(query) ||
+      workout.muscleGroups.some((group) => group.toLowerCase().includes(query))
+    );
+  });
+
+  const sortedList = [...filteredList].sort((a, b) => {
     if (sortBy === 'duration') return a.duration - b.duration;
     if (sortBy === 'calories') return a.caloriesBurned - b.caloriesBurned;
     return b.rating - a.rating;
@@ -70,7 +80,7 @@ export default function MyPlanPage() {
         </div>
       </div>
 
-      {/* Tabs + Sort */}
+      {/* Tabs + Search + Sort */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mt-8">
         <div className="inline-flex bg-white/5 rounded-full p-1">
           <button
@@ -91,17 +101,24 @@ export default function MyPlanPage() {
           </button>
         </div>
 
-        <div className="flex items-center gap-2 text-sm text-gray-400">
-          <span>Sort By</span>
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as SortOption)}
-            className="bg-white/5 border border-white/10 rounded-full px-4 py-2 text-white text-sm outline-none cursor-pointer"
-          >
-            <option value="duration" className="bg-[#1a1a1a]">Duration</option>
-            <option value="calories" className="bg-[#1a1a1a]">Calories</option>
-            <option value="rating" className="bg-[#1a1a1a]">Rating</option>
-          </select>
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
+          <SearchBar
+            value={searchQuery}
+            onChange={setSearchQuery}
+            placeholder="Search workouts..."
+          />
+          <div className="flex items-center gap-2 text-sm text-gray-400">
+            <span>Sort By</span>
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as SortOption)}
+              className="bg-white/5 border border-white/10 rounded-full px-4 py-2.5 text-white text-sm outline-none cursor-pointer"
+            >
+              <option value="duration" className="bg-[#1a1a1a]">Duration</option>
+              <option value="calories" className="bg-[#1a1a1a]">Calories</option>
+              <option value="rating" className="bg-[#1a1a1a]">Rating</option>
+            </select>
+          </div>
         </div>
       </div>
 
@@ -109,18 +126,22 @@ export default function MyPlanPage() {
       {sortedList.length === 0 ? (
         <div className="mt-8 border-2 border-dashed border-white/10 rounded-xl py-20 text-center">
           <h3 className="font-oswald text-2xl font-bold uppercase text-white">
-            Nothing here yet
+            {searchQuery ? 'No results found' : 'Nothing here yet'}
           </h3>
           <p className="text-gray-500 mt-2">
-            Browse the library and add a lift to get today moving.
+            {searchQuery
+              ? `No workouts match "${searchQuery}". Try a different search.`
+              : 'Browse the library and add a lift to get today moving.'}
           </p>
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 bg-[#ccff00] text-black font-bold px-6 py-3 rounded-full mt-6 hover:bg-[#b8e600] transition-colors"
-          >
-            Go to workouts
-            <ArrowRight className="w-4 h-4" />
-          </Link>
+          {!searchQuery && (
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2 bg-[#ccff00] text-black font-bold px-6 py-3 rounded-full mt-6 hover:bg-[#b8e600] transition-colors"
+            >
+              Go to workouts
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          )}
         </div>
       ) : (
         <div className="mt-6 space-y-4">
