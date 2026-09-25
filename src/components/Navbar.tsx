@@ -1,11 +1,13 @@
 'use client';
 
+import { usePlan } from '@/context/PlanContext';
 import { Zap } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const Navbar = () => {
   const pathname = usePathname();
+  const { plan, saved } = usePlan();
 
   const links = [
     { name: 'Workouts', href: '/' },
@@ -15,8 +17,7 @@ const Navbar = () => {
   return (
     <header className="sticky top-0 z-50 bg-[#0a0a0a] border-b border-white/10">
       <nav className="max-w-7xl mx-auto px-4 md:px-8 h-16 flex items-center justify-between">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 group">
+        <Link href="/" className="flex items-center gap-2">
           <div className="w-8 h-8 bg-[#ccff00] rounded flex items-center justify-center">
             <Zap className="w-5 h-5 text-black fill-black" />
           </div>
@@ -25,7 +26,6 @@ const Navbar = () => {
           </span>
         </Link>
 
-        {/* Center Links */}
         <ul className="hidden md:flex items-center gap-8">
           {links.map((link) => {
             const isActive = pathname === link.href;
@@ -46,7 +46,6 @@ const Navbar = () => {
           })}
         </ul>
 
-        {/* Right Badges */}
         <div className="flex items-center gap-4">
           <Link
             href="/my-plan"
@@ -54,7 +53,7 @@ const Navbar = () => {
           >
             <span className="hidden sm:inline">Plan</span>
             <span className="bg-[#ccff00] text-black text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
-              0
+              {plan.length}
             </span>
           </Link>
           <Link
@@ -63,7 +62,7 @@ const Navbar = () => {
           >
             <span className="hidden sm:inline">Saved</span>
             <span className="border border-white/20 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
-              0
+              {saved.length}
             </span>
           </Link>
         </div>

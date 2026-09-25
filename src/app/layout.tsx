@@ -1,6 +1,9 @@
 import Navbar from '@/components/Navbar';
+import { PlanProvider } from '@/context/PlanContext';
 import type { Metadata } from 'next';
 import { Inter, Oswald } from 'next/font/google';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './globals.css';
 
 const oswald = Oswald({
@@ -27,8 +30,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${oswald.variable} ${inter.variable} font-inter bg-[#0a0a0a] text-white antialiased`}>
-        <Navbar />
-        <main>{children}</main>
+        <PlanProvider>
+          <Navbar />
+          <main>{children}</main>
+          <ToastContainer position="top-right" autoClose={2000} theme="dark" />
+        </PlanProvider>
       </body>
     </html>
   );

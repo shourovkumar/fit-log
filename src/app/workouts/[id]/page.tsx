@@ -1,5 +1,6 @@
+import ActionButtons from '@/components/ActionButtons';
 import type { Workout } from '@/types';
-import { ArrowLeft, Bookmark, Plus } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -29,9 +30,7 @@ export default async function WorkoutDetailsPage({
         Back to Library
       </Link>
 
-
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
-
         <div className="relative w-full aspect-square rounded-2xl overflow-hidden">
           <Image
             src={workout.image}
@@ -43,14 +42,12 @@ export default async function WorkoutDetailsPage({
           />
         </div>
 
-
         <div>
           <h1 className="font-oswald text-4xl md:text-5xl font-bold uppercase text-white">
             {workout.name}
           </h1>
 
           <p className="text-gray-400 mt-3">{workout.description}</p>
-
 
           <div className="flex flex-wrap gap-2 mt-5">
             {workout.muscleGroups.map((group) => (
@@ -63,7 +60,6 @@ export default async function WorkoutDetailsPage({
             ))}
           </div>
 
-
           <div className="mt-6 border border-white/10 rounded-xl divide-y divide-white/10">
             <SpecRow label="Equipment" value={workout.equipment} />
             <SpecRow label="Difficulty" value={workout.difficulty} />
@@ -73,7 +69,6 @@ export default async function WorkoutDetailsPage({
             <SpecRow label="Calories" value={`${workout.caloriesBurned} kcal`} />
             <SpecRow label="Rating" value={workout.rating.toString()} />
           </div>
-
 
           <h2 className="font-oswald text-xl font-bold uppercase text-white mt-8 mb-4">
             Instructions
@@ -87,17 +82,7 @@ export default async function WorkoutDetailsPage({
             ))}
           </ol>
 
-         
-          <div className="flex flex-col sm:flex-row gap-3 mt-8">
-            <button className="flex-1 flex items-center justify-center gap-2 bg-[#ccff00] text-black font-bold px-6 py-3 rounded-full hover:bg-[#b8e600] transition-colors">
-              <Plus className="w-4 h-4" />
-              Add to today's plan
-            </button>
-            <button className="flex-1 flex items-center justify-center gap-2 border border-white/20 text-white font-bold px-6 py-3 rounded-full hover:bg-white/5 transition-colors">
-              <Bookmark className="w-4 h-4" />
-              Save for later
-            </button>
-          </div>
+          <ActionButtons workout={workout} />
         </div>
       </div>
     </div>
