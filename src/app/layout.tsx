@@ -1,3 +1,4 @@
+import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
 import { PlanProvider } from '@/context/PlanContext';
 import type { Metadata } from 'next';
@@ -29,10 +30,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${oswald.variable} ${inter.variable} font-inter bg-[#0a0a0a] text-white antialiased`}>
+      <body className={`${oswald.variable} ${inter.variable} font-inter bg-[#0a0a0a] text-white antialiased min-h-screen flex flex-col`}>
         <PlanProvider>
           <Navbar />
-          <main>{children}</main>
+          <main className="flex-1">{children}</main>
+          <Footer />
           <ToastContainer position="top-right" autoClose={2000} theme="dark" />
         </PlanProvider>
       </body>
