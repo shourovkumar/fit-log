@@ -1,7 +1,7 @@
 import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
 import { PlanProvider } from '@/context/PlanContext';
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Inter, Oswald } from 'next/font/google';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -23,6 +23,12 @@ export const metadata: Metadata = {
   description: 'A dark, no-nonsense gym companion.',
 };
 
+export const viewport: Viewport = {
+  themeColor: '#0a0a0a',
+  width: 'device-width',
+  initialScale: 1,
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -30,7 +36,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${oswald.variable} ${inter.variable} font-inter bg-[#0a0a0a] text-white antialiased min-h-screen flex flex-col`}>
+      <body
+        suppressHydrationWarning
+        className={`${oswald.variable} ${inter.variable} font-inter bg-[#0a0a0a] text-white antialiased min-h-screen flex flex-col`}
+      >
         <PlanProvider>
           <Navbar />
           <main className="flex-1">{children}</main>
