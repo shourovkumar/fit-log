@@ -3,11 +3,16 @@ import WorkoutCard from '@/components/WorkoutCard';
 import type { Workout } from '@/types';
 
 async function getWorkouts(): Promise<Workout[]> {
-  const res = await fetch('https://api.abcz.workers.dev/api/fitlog', {
-    next: { revalidate: 60 },
-  });
-  if (!res.ok) throw new Error('Failed to fetch workouts');
-  return res.json();
+  try {
+    const res = await fetch('https://api.api-store.workers.dev/api/fitlog', {
+      cache: 'no-store',
+    });
+    if (!res.ok) return [];
+    return res.json();
+  } catch (error) {
+    console.error('Failed to fetch workouts:', error);
+    return [];
+  }
 }
 
 export default async function Home() {
@@ -28,11 +33,19 @@ export default async function Home() {
           Twelve lifts covering every major muscle group.
         </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mt-8">
-          {workouts.map((workout) => (
-            <WorkoutCard key={workout.id} workout={workout} />
-          ))}
-        </div>
+        {workouts.length === 0 ? (
+          <div className="mt-8 border-2 border-dashed border-white/10 rounded-xl py-20 text-center">
+            <p className="text-gray-400">
+              Couldn't load workouts. Please refresh the page.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mt-8">
+            {workouts.map((workout) => (
+              <WorkoutCard key={workout.id} workout={workout} />
+            ))}
+          </div>
+        )}
       </section>
     </div>
   );
